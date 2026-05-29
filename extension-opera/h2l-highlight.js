@@ -1,6 +1,6 @@
 /* h2l-highlight.js */
 
-const debug = false;
+const debug = true;
 
 const minWidth = 68;
 const minHeight = 27;
@@ -54,10 +54,8 @@ const highlightSize = {
   }
 };
 
-const styleTemplate = document.createElement('template');
-styleTemplate.innerHTML = `
-<style>
-
+const styleElem = document.createElement('style');
+styleElem.textContent = `
 .h2l-highlight,
 .hidden-elem-msg {
   color-scheme: light dark;
@@ -89,10 +87,19 @@ styleTemplate.innerHTML = `
   --z-index-highlight: auto;
 }
 
+.container {
+  display: block;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
 .h2l-highlight {
   margin: 0;
   padding: 0;
   position: absolute;
+  top: 0;
+  left: 0;
   background: transparent;
   border-radius: var(--border-radius);
   border-width: var(--contrast-width);
@@ -101,7 +108,6 @@ styleTemplate.innerHTML = `
   box-sizing: border-box;
   pointer-events:none;
   z-index: auto;
-  display: none;
 }
 
 .h2l-highlight.hasInfoBottom,
@@ -128,6 +134,26 @@ styleTemplate.innerHTML = `
   background: transparent;
 }
 
+.h2l-highlight .overlay-info {
+  margin: 0;
+  padding: 2px;
+  position: relative;
+  display: inline-block;
+  text-align: left;
+  font-size: var(--font-size);
+  font-family: var(--info-font-family);
+  border-width: var(--border-width);
+  border-style: var(--border-style);
+  border-color: light-dark(var(--color-light-background), var(--color-dark-background));
+  background-color: light-dark(var(--color-light-background), var(--color-dark-background));
+  color: light-dark(var(--color-light-text-color), var(--color-dark-text-color));
+  z-index: auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events:none;
+}
+
 @keyframes fadeIn {
   0% { opacity: 0; }
   100% { opacity: 1; }
@@ -147,27 +173,6 @@ styleTemplate.innerHTML = `
   text-align: center;
   animation: fadeIn 1.5s;
   z-index: auto;
-  display: none;
-}
-
-.h2l-highlight .overlay-info {
-  margin: 0;
-  padding: 2px;
-  position: relative;
-  display: inline-block;
-  text-align: left;
-  font-size: var(--font-size);
-  font-family: var(--info-font-family);
-  border-width: var(--border-width);
-  border-style: var(--border-style);
-  border-color: light-dark(var(--color-light-background), var(--color-dark-background));
-  background-color: light-dark(var(--color-light-background), var(--color-dark-background));
-  color: light-dark(var(--color-light-text-color), var(--color-dark-text-color));
-  z-index: auto;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  pointer-events:none;
 }
 
 .h2l-highlight .overlay-info.hasInfoTop {
@@ -204,8 +209,6 @@ styleTemplate.innerHTML = `
   font-style: italic;
   padding-left: 0.25em;
 }
-
-</style>
 `;
 
 /*
@@ -231,14 +234,18 @@ class H2LHighlightElement extends HTMLElement {
     this.attachShadow({ mode: 'open' });
 
     // Add style element
-    this.shadowRoot.appendChild(styleTemplate.content.cloneNode(true));
+    this.shadowRoot.appendChild(styleElem);
 
     // Get references
 
+    this.containerElem  = document.createElement('div');
+    this.containerElem.className = 'container';
+    this.shadowRoot.appendChild(this.containerElem);
+    this.containerElem.setAttribute('hidden', '');
+
     this.overlayElem  = document.createElement('div');
     this.overlayElem.className = HIGHLIGHT_CLASS;
-    this.shadowRoot.appendChild(this.overlayElem);
-    this.overlayElem.style.display = 'none';
+    this.containerElem.appendChild(this.overlayElem);
 
     this.borderElem = document.createElement('div');
     this.borderElem.className = 'overlay-border';
@@ -262,8 +269,8 @@ class H2LHighlightElement extends HTMLElement {
 
     this.hiddenElem = document.createElement('div');
     this.hiddenElem.className = 'hidden-elem-msg';
-    this.shadowRoot.appendChild(this.hiddenElem);
-    this.hiddenElem.style.display = 'none';
+    this.containerElem.appendChild(this.hiddenElem);
+    this.hiddenElem.setAttribute('hidden', '');
 
     this.highlightSize = highlightSize[HIGHLIGHT_SIZES[2]];
     this.highlightStyle = HIGHLIGHT_STYLE[0];
@@ -451,14 +458,12 @@ class H2LHighlightElement extends HTMLElement {
 
       const elemRole = (this.nameSrc === 'contents' || this.nameSrc === 'none') &&
                        !this.nameHasAlt &&
-//                       !this.selected &&
                        !this.showName ?
                        this.elemRole :
                        `${this.elemRole}: `;
 
       const name =  this.nameSrc !== 'contents' ||
                     this.nameHasAlt ||
-//                    this.selected ||
                     this.showName ?
                     this.name :
                     '';
@@ -472,7 +477,7 @@ class H2LHighlightElement extends HTMLElement {
         // If element is hidden make hidden element message visible
         // and use for highlighting
         this.hiddenElem.textContent = this.getHiddenMessage();
-        this.hiddenElem.style.display = 'block';
+        this.hiddenElem.removeAttribute('hidden');
 
         const minValue = this.highlightSize.contrastWidth;
 
@@ -496,7 +501,7 @@ class H2LHighlightElement extends HTMLElement {
                                                     this.highlightSize.overlayAdjust);
       }
       else {
-        this.hiddenElem.style.display = 'none';
+        this.hiddenElem.setAttribute('hidden', '');
 
         scrollElement = this.updateHighlightElement(elemRect,
                                                     elemRole,
@@ -506,19 +511,6 @@ class H2LHighlightElement extends HTMLElement {
                                                     this.highlightSize.borderWidth,
                                                     this.highlightSize.contrastWidth,
                                                     this.highlightSize.overlayAdjust);
-      }
-
-      if (scrollBehavior !== 'none') {
-        if (this.isElementInHeightLarge(elemRect)) {
-          if (!this.isElementStartInViewport(elemRect) && (!isReduced || force)) {
-            scrollElement.scrollIntoView({ behavior: scrollBehavior, block: 'start', inline: 'nearest' });
-          }
-        }
-        else {
-          if (!this.isElementInViewport(elemRect)  && (!isReduced || force)) {
-            scrollElement.scrollIntoView({ behavior: scrollBehavior, block: 'center', inline: 'nearest' });
-          }
-        }
       }
     }
   }
@@ -555,11 +547,12 @@ class H2LHighlightElement extends HTMLElement {
     const a = -1 * (contrastWidth);
     const b = (contrastWidth - borderWidth) / 2;
 
-//    this.overlayElem.style.outline   = '1px dotted green';
-//    this.borderElem.style.outline    = '1px dashed blue';
+    this.containerElem.style.top  = -1 * (elemRect.height + borderOffset) + 'px';
+    this.containerElem.style.left  = -1 * borderOffset + 'px';
 
-    this.overlayElem.style.left   = adjRect.left   + 'px';
-    this.overlayElem.style.top    = adjRect.top    + 'px';
+    this.overlayElem.style.left   = 0   + 'px';
+    this.overlayElem.style.top    = 0   + 'px';
+
     this.overlayElem.style.zIndex = this.zIndex + 1;
 
     this.borderElem.style.left    = a + b + 'px';
@@ -571,7 +564,6 @@ class H2LHighlightElement extends HTMLElement {
     this.borderElem.style.width   = (adjRect.width - 2 * b) + 'px';
     this.borderElem.style.height  = (adjRect.height - 2 * b) + 'px';
 
-
     if (this.selected) {
       this.infoElem.classList.add('selected');
     }
@@ -580,8 +572,7 @@ class H2LHighlightElement extends HTMLElement {
       this.infoElem.style.maxWidth  = (adjRect.width - 2 * contrastWidth) + 'px';
     }
 
-    this.overlayElem.style.display = 'block';
-    this.borderElem.style.display  = 'block';
+    this.containerElem.removeAttribute('hidden');
 
     if (elemRole) {
 
@@ -786,8 +777,8 @@ class H2LHighlightElement extends HTMLElement {
    */
   removeHighlight() {
     if (this.overlayElem) {
-      this.overlayElem.style.display = 'none';
-      this.hiddenElem.style.display = 'none';
+      this.contatinerElem.setAttribute('hidden');
+      this.hiddenElem.setAttribute('hidden');
     }
   }
 

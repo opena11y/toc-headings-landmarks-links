@@ -136,7 +136,7 @@ exportTemplate.innerHTML = `
 
     </fieldset>
 
-    <label class="grid">
+    <label class="single">
         <input type="checkbox"
                data-group="info"
                data-option="promptForExportOptions"/>

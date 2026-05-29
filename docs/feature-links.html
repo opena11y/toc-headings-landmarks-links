@@ -169,9 +169,37 @@
                     The third tab provides a <a href="https://www.w3.org/WAI/ARIA/apg/patterns/grid/">grid view</a> of the links of a web page.
                   </li>
                   <li>
-                    Each row provides the position of the link on the page, the <a href="https://www.w3.org/WAI/ARIA/apg/practices/names-and-descriptions/">accessible name</a> and information on the URL or file extensions.  The following lists are the common values for the type column.
+                    Each row has four columns providing information on:
+                    <ol>
+                      <li>The position of the link on the page.</li>
+                      <li>The <a href="https://www.w3.org/WAI/ARIA/apg/practices/names-and-descriptions/">accessible name</a> of the link.</li>
+                      <li>If the link has an <a href="https://www.w3.org/WAI/ARIA/apg/practices/names-and-descriptions/">accessible description</a>.</li>
+                      <li>Information on the domain name of URL or file extensions.</li>
+                    </ol>
+                  </li>
+                  <li>Checkbox to highlight all headings on a page.</li>
+                  <li>Checkbox to include accessible name as part of the highlight.</li>
+                  <li>Button to open a dialog of options to filter links based on domain information.</li>
+                </ul>
 
-                                        <div class="type">Domain Information:</div>
+                <h2>Link Filter Options</h2>
+
+                <figure class="image">
+                   <img src="./images/feature-link-filters.png"
+                        alt=""/>
+                        <figcaption>Screen Shot of links filter dialog box options</figcaption>
+                </figure>
+
+                <p>Link filtering options include:</p>
+                <ul>
+                  <li>Internal links</li>
+                  <li>Same sub-domain links</li>
+                  <li>Same domain links</li>
+                  <li>External links</li>
+                  <li>Links with non-html file extension links (e.g. .pdf, .docx, .xlsx ...)</li>
+                </ul>
+
+                                     <div class="type">Domain Information:</div>
                     <ul class="type">
                       <li>
                         <span class="extension">External:</span> Links that reference a different website (e.g. different domain name)
@@ -201,15 +229,7 @@
                     </ul>
 
 
-                  </li>
-                  <li>
-                    The grid consists of three columns (e.g. position, name and type) and each of the columns can be used to sort the gird rows.
-                  </li>
-                  <li>In the <a href="options.html">Options</a> their are a number of filters to only show links with a certain type.</li>
-                  </li>
-                </ul>
-
-                <h2>Accessibility Considerations</h2>
+                <h2>Accessibility Considerations for Links</h2>
 
                 <ul>
                   <li><em>Avoid generic phrases:</em> Verify links do not use phrases like "click here," "read more," or "learn more." or the URL as the link text.</li>
@@ -223,7 +243,6 @@
                   </li>
                   <li><a href="https://webaim.org/techniques/hypertext/">WebAim: Links and Hypertext</a></li>
                 </ul>
-
 
               </section>
 

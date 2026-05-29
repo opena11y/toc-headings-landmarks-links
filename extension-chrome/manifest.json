@@ -55,7 +55,7 @@
     "storage"
   ],
   "web_accessible_resources": [{
-    "resources": ["h2l-highlight.js"],
+    "resources": ["h2l-highlight.js", "h2l-highlight.css"],
     "matches": ["<all_urls>"]
   }],
   "content_scripts": [

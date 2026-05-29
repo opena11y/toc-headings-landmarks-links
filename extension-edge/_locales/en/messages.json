@@ -356,7 +356,7 @@
     "description": "Export dialog export button label"
   },
   "export_dialog_legend_info": {
-    "message": "Information on",
+    "message": "Export Information",
     "description": "Export dialog title"
   },
   "export_dialog_label_headings": {
@@ -372,7 +372,7 @@
     "description": "Export dialog links checkbox label"
   },
   "export_dialog_legend_filename": {
-    "message": "Filename Options ",
+    "message": "Export Filename Options ",
     "description": "Fieldset for export file name options"
   },
   "export_dialog_label_filename": {

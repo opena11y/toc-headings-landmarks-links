@@ -1,0 +1,145 @@
+:root {
+ color-scheme: light dark;
+
+  --info-font-family: arial, verdana, tahoma, "trebuchet MS", sans-serif;
+  --role-font-family: courier, monospace;
+
+  --color-light-text-color:   #000000;
+  --color-light-border-color: hsl(21.6, 100%, 50.98%);
+  --color-light-background:  #dddddd;
+
+  --color-dark-text-color:    #ffffff;
+  --color-dark-border-color:  #dddddd;
+  --color-dark-background:   hsl(21.6, 100%, 49.02%);
+
+  --color-light-hidden-text:       #000000;
+  --color-light-hidden-background: #ffcc00;
+
+  --color-dark-hidden-text:       #ffcc00;
+  --color-dark-hidden-background: #000000;
+
+  --font-size:      14pt;
+  --border-radius:  7px;
+  --border-width:   3px;
+  --border-style:   solid;
+  --contrast-width: 7px;
+
+  --scroll-behavior:  instant;
+  --z-index-highlight: auto;
+}
+
+.h2l-highlight {
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  background: transparent;
+  border-radius: var(--border-radius);
+  border-width: var(--contrast-width);
+  border-style: solid;
+  border-color: light-dark(var(--color-light-background), var(--color-dark-background));
+  box-sizing: border-box;
+  pointer-events:none;
+  z-index: auto;
+  display: none;
+}
+
+.h2l-highlight.hasInfoBottom,
+.h2l-highlight .overlay-border.hasInfoBottom {
+  border-radius: var(--border-radius) var(--border-radius) var(--border-radius) 0;
+}
+
+.h2l-highlight.hasInfoTop,
+.h2l-highlight .overlay-border.hasInfoTop {
+    border-radius: 0 var(--border-radius) var(--border-radius) var(--border-radius);
+}
+
+.h2l-highlight .overlay-border {
+  margin: 0;
+  padding: 0;
+  position: relative;
+  border-radius: var(--border-radius);
+  border-width: var(--border-width);
+  border-style: var(--border-style);
+  border-color: light-dark(var(--color-light-border-color), var(--color-dark-border-color));
+  z-index: auto;
+  box-sizing: border-box;
+  pointer-events:none;
+  background: transparent;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.hidden-elem-msg {
+  position: absolute;
+  margin: 0;
+  padding: .25em;
+  border: none;
+  color: light-dark(var(--color-light-hidden-text), var(--color-dark-hidden-text));
+  background-color: light-dark(var(--color-light-hidden-background), var(--color-dark-hidden-background));
+  font-family: var(--info-font-family);
+  font-size: var(--font-size);
+  font-style: italic;
+  font-weight: bold;
+  text-align: center;
+  animation: fadeIn 1.5s;
+  z-index: auto;
+  display: none;
+}
+
+.h2l-highlight .overlay-info {
+  margin: 0;
+  padding: 2px;
+  position: relative;
+  display: inline-block;
+  text-align: left;
+  font-size: var(--font-size);
+  font-family: var(--info-font-family);
+  border-width: var(--border-width);
+  border-style: var(--border-style);
+  border-color: light-dark(var(--color-light-background), var(--color-dark-background));
+  background-color: light-dark(var(--color-light-background), var(--color-dark-background));
+  color: light-dark(var(--color-light-text-color), var(--color-dark-text-color));
+  z-index: auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events:none;
+}
+
+.h2l-highlight .overlay-info.hasInfoTop {
+  border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+.h2l-highlight .overlay-info.hasInfoBottom {
+  border-radius: 0 0 var(--border-radius) var(--border-radius);
+}
+
+.h2l-highlight .overlay-info span {
+  margin: 0;
+  padding: 0;
+  display: inline;
+}
+
+.h2l-highlight .overlay-info span.elem-role,
+.h2l-highlight .overlay-info span.desc-label {
+  font-weight: bold;
+  font-family: var(--info-font-family);
+  }
+
+.h2l-highlight .overlay-info span.name,
+.h2l-highlight .overlay-info span.desc {
+  padding-left: 0.25em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: var(--info-font-family);
+}
+
+.h2l-highlight .overlay-info span.desc-label,
+.h2l-highlight .overlay-info span.desc {
+  font-style: italic;
+  padding-left: 0.25em;
+}

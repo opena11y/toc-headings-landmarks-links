@@ -474,12 +474,22 @@ main h2 {
 main .feature ul,
 main .feature ol {
   margin: 0;
+  padding: 0;
+  padding-left: 1em;
 }
 
 main .feature ul li,
 main .feature ol li {
   margin: 0;
+  padding: 0;
   padding-bottom: 0.5em;
+}
+
+main .feature ul ol li,
+main .feature ol ol li {
+  margin: 0;
+  padding: 0;
+  padding-bottom: 0.125em;
 }
 
 .hidden-small {
@@ -686,6 +696,14 @@ main code.h {
   background-color: light-dark(var(--resultH), var(--resultHDark));
 }
 
+main .note {
+  font-weight: bold;
+}
+
+main .option {
+  color: light-dark(var(--headingColor), var(--headingColorDark));
+  font-style: italic;
+}
 
 footer  {
   margin: 0;
