@@ -13,7 +13,7 @@ const tagLineName = "Headings, Landmarks and Links Browser Extension";
 const projectName   = "Headings, Landmarks and Links Side Panel";
 
 const issuesURL   = "https://github.com/opena11y/h2l-side-panel/issues";
-const issuesEmail = "jongund@illinois.edu";
+const issuesEmail = "jongund@openweba11y.com";
 
 const outputDirectory   = './docs/';
 const templateDirectory = './src-docs/templates';
