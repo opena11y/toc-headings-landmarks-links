@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 echo "Building extensions.."
 
-version="2.0.0"
+version="2.0.1"
 
 zip -r ./docs/dist/h2l-side-panel-firefox-$version.zip extension-firefox/*  -x ".*" -x "__MACOSX"
 zip -r ./docs/dist/h2l-side-panel-chrome-$version.zip  extension-chrome/*   -x ".*" -x "__MACOSX"

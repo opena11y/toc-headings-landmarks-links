@@ -1,10 +1,13 @@
 # Version history for Page Table of Contents
 
+## Version 2.0.1
+* Updated h2l side panel highlight element feature
+
 ## Version 2.0
 * Changed CSS to use variable instead of SASS
 * Updated highlighting, adding a highlight all and show accessible name options
 * Options for highlighting and filtering in each tap panel view
-* Updated highlightling features
+* Updated highlighting features
 
 ## Version 1.1.0
 * Changed branding icon to H2L from TOC

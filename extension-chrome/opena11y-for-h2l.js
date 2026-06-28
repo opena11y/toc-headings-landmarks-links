@@ -31375,13 +31375,16 @@
         debug$10.tag(elementNode);
       }
 
-      this.display  = style.getPropertyValue("display");
-      this.position =  style.getPropertyValue("position").toLowerCase();
-      this.overflow =  style.getPropertyValue("overflow").toLowerCase();
-      this.isPosition = ['absolute', 'fixed', 'sticky'].includes(this.position);
-      this.isOverflow = ['auto', 'hidden'].includes(this.overflow);
+      this.display    = style.getPropertyValue("display");
+      this.position   =  style.getPropertyValue("position").toLowerCase();
 
-      this.positionValue = this.isPosition ? this.position : 'static';
+      this.isPosition = ['absolute', 'fixed', 'sticky'].includes(this.position);
+
+
+      this.positionValue = this.isPosition ? this.position :
+                           parentColorContrast.positionValue ?
+                           parentColorContrast.positionValue :
+                           'absolute';
 
       this.hasTextNodes = this.getHasTextNodes(elementNode);
 
@@ -35896,6 +35899,7 @@
     update (domElement, isCrossDomain) {
       const ife = new IFrameElement(domElement, isCrossDomain);
       this.allIFrameElements.push(ife);
+      debug$U.flag && ife.showInfo();
     }
 
     /**
@@ -37631,8 +37635,8 @@
       this.ordinalPosition = 2;
       this.documentIndex = 0;
 
-      this.allDomElements = [];
-      this.allDomTexts    = [];
+      this.allDomElements   = [];
+      this.allDomTexts      = [];
 
       const parentInfo = new ParentInfo();
       parentInfo.document        = startingDoc;
@@ -49757,8 +49761,8 @@
       debug$2.flag && debug$2.log(`[evaluateWCAG][ariaVersion]: ${this.ariaVersion}`);
       debug$2.flag && debug$2.log(`[evaluateWCAG][  addDataId]: ${addDataId}`);
 
-      const domCache      = new DOMCache(this.startingDoc, this.startingDoc.body, this.ariaVersion, addDataId);
-      this.allDomElements = domCache.allDomElements;
+      const domCache        = new DOMCache(this.startingDoc, this.startingDoc.body, this.ariaVersion, addDataId);
+      this.allDomElements   = domCache.allDomElements;
       this._allRuleResults = [];
       this._ruleResultsSummary.clear();
       this._rcRuleResultsGroup.clear();
@@ -50129,7 +50133,6 @@
       });
       return rgr;
     }
-
 
     /**
      * @method getDataForJSON
@@ -50597,7 +50600,7 @@
   /* opena11y-for-h2l.js */
 
   // Constants and variables
-  const debug = true;
+  const debug = false;
 
   const HIGHLIGHT_ELEMENT_NAME = 'opena11y-h2l-highlight';
 
@@ -50655,7 +50658,7 @@
    *   @function isElementInViewport
    *
    *   @desc  Returns true if element is already visible in view port,
-   *          otheriwse false
+   *          otherwise false
    *
    *   @param {Object} rect : Rect of element to highlight
    *
@@ -50708,24 +50711,6 @@
     return (1.2 * rect.height) > (window.innerHeight || document.documentElement.clientHeight);
   }
 
-  /*
-   *   @function isElementHidden
-   *
-   *   @desc  Returns true if the element is hidden on the
-   *          graphical rendering
-   *
-   *   @param  {Object}  rect   : Bounding rect of element to highlight
-   *
-   *   @returns see @desc
-  function isElementHidden(rect) {
-    return (rect.height < 3) ||
-           (rect.width  < 3) ||
-           ((rect.left + rect.width)  < (rect.width / 2)) ||
-           ((rect.top  + rect.height) < (rect.height / 2));
-  }
-   */
-
-
   // Main functions
 
   function highlightItems(dataObj) {
@@ -50733,7 +50718,14 @@
     function getRect (elem) {
       let rect = elem.getBoundingClientRect();
       if (isZeroDimension(rect)) {
-        rect = new DOMRect(0,0,0,0);
+        rect = {
+          top: 0,
+          right: 0,
+          bottom: 0,
+          left: 0,
+          height: 0,
+          width: 0
+        };
         let childElem = elem.firstElementChild;
         while (childElem) {
           const r = childElem.getBoundingClientRect();
@@ -50752,50 +50744,62 @@
         rect.width  = rect.right  - rect.left;
       }
       return rect;
-    }
+    } /* end getRect */
 
 
-    function highlightPosition(position, elemRole, selected, showName) {
+    function highlightPosition(domPos, elemRole, selected, showName) {
 
-      const de = evaluationResult.getDomElementByPosition(position);
+      const de = evaluationResult.getDomElementByPosition(domPos);
 
-      if (de) {
+      if (de && de.parentInfo && de.parentInfo.document) {
 
         const rect = getRect(de.node);
 
         const he = document.createElement(HIGHLIGHT_ELEMENT_NAME);
 
-        de.node.appendChild(he);
-        highlightElements.push(he);
+        const docElem = de.parentInfo.document ?
+                        de.parentInfo.document :
+                        window.document;
 
-        const highlightConfig = selected ?
-                              `${highlightSize};${highlightStyleSelected}` :
-                              `${highlightSize};${highlightStyle}`;
-        he.setAttribute('highlight-config', highlightConfig);
+        const attachElem = docElem.body ?
+                           docElem.body :
+                           docElem.documentElement;
+
+        if (attachElem && attachElem.appendChild) {
+          // Append the highlight element to the document object that contains the DOM element
+          attachElem.appendChild(he);
+          highlightElements.push(he);
+
+          const highlightConfig = selected ?
+                                `${highlightSize};${highlightStyleSelected}` :
+                                `${highlightSize};${highlightStyle}`;
+          he.setAttribute('highlight-config', highlightConfig);
 
 
-        he.setAttribute('position', position);
+          he.setAttribute('position', domPos);
 
-        he.setAttribute('elem-role',    elemRole);
-        he.setAttribute('name',         de.accName.name);
-        he.setAttribute('name-src',     de.accName.source);
-        he.setAttribute('name-has-alt', de.accName.includesAlt || de.accName.includesAriaLabel);
-        he.setAttribute('desc',         de.accDescription.name);
-        he.setAttribute('desc-src',     de.accDescription.source);
-        he.setAttribute('z-index',      de.visibility.zIndex);
-        he.setAttribute('msg-hidden',   msgHidden);
-        he.setAttribute('show-name',    showName);
-        he.setAttribute('selected',     selected);
+          he.setAttribute('elem-role',    elemRole);
+          he.setAttribute('name',         de.accName.name);
+          he.setAttribute('name-src',     de.accName.source);
+          he.setAttribute('name-has-alt', de.accName.includesAlt || de.accName.includesAriaLabel);
+          he.setAttribute('desc',         de.accDescription.name);
+          he.setAttribute('desc-src',     de.accDescription.source);
+          he.setAttribute('z-index',      de.visibility.zIndex);
+          he.setAttribute('msg-hidden',   msgHidden);
+          he.setAttribute('show-name',    showName);
+          he.setAttribute('selected',     selected);
 
-        let attrValue = `${Math.round(rect.left)}`;
-        attrValue += `;${Math.round(rect.top)}`;
-        attrValue += `;${Math.round(rect.width)}`;
-        attrValue += `;${Math.round(rect.height)}`;
-        attrValue += `;static`;
+          let attrValue = `${Math.round(rect.left)}`;
+          attrValue += `;${Math.round(rect.top)}`;
+          attrValue += `;${Math.round(rect.width)}`;
+          attrValue += `;${Math.round(rect.height)}`;
+          attrValue += `;${de.colorContrast.positionValue}`;
 
-        he.setAttribute('highlight', attrValue);
+          he.setAttribute('highlight', attrValue);
+        }
+
       }
-    }
+    } /* end highlightPosition */
 
     const selectedItem           = dataObj.selectedItem;
     const allItems               = dataObj.allItems;
@@ -50807,11 +50811,10 @@
     const showName               = dataObj.showName;
 
     // If there is a selected item and scrollto enabled
-  //  const mediaQuery = window.matchMedia(`(prefers-reduced-motion: reduce)`);
-  //  const isReduced = !mediaQuery || mediaQuery.matches;
+    const mediaQuery = window.matchMedia(`(prefers-reduced-motion: reduce)`);
+    const isReduced = !mediaQuery || mediaQuery.matches;
 
-  //  if (selectedItem.position && (scrollBehavior !== 'none') && !isReduced) {
-    if (selectedItem.position) {
+    if (selectedItem.position && (scrollBehavior !== 'none') && !isReduced) {
       const de = evaluationResult.getDomElementByPosition(selectedItem.position);
       if (de && de.node) {
         const deRect = getRect(de.node);
@@ -50828,7 +50831,6 @@
         }
       }
     }
-
 
     if (allItems.length) {
       removeHighlightElements();
@@ -50847,7 +50849,6 @@
       }
     }
 
-
   }
 
   // Listen for messages from side panel
@@ -50855,13 +50856,11 @@
     function(request, sender, sendResponse) {
       // Highlight selected and/or all elements on a page
       if(request.highlightItems) {
-        console.log(`[highlightItems]`);
         highlightItems(request.highlightItems);
       }
 
       // Remove highlights
       if(request.removeHighlight) {
-        console.log(`[removeHighlight]`);
         removeHighlightElements();
       }
 
@@ -50879,7 +50878,6 @@
 
       // Update heading, region and link information
       if(request.runEvaluation) {
-        console.log(`[runEvaluation]`);
         removeHighlightElements();
         const doc = window.document;
         evaluationResult  = evaluationLibrary.evaluateWCAG(doc,

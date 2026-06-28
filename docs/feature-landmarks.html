@@ -33,7 +33,7 @@
                       <img src="./images/h2l-128-light.png" alt="Icon for Headings, Landmarks and Links Side Panel">
                     </span>
                     <span class="version">
-                      Version 2.0
+                      Version 2.0.1
                     </span>
                   </span>
 
@@ -176,59 +176,99 @@
                   </li>
                 </ul>
 
-                <h2>Options</h2>
+                <h2 id="options">Options</h2>
 
-                <ul>
-                  <li>
-                    <span class="option">Highlight all landmark regions:</span> Highlights all the  on the page.
-                  </li>
-                  <li>
-                    <span class="option">Emulate how screen readers filter landmark regions:</span> Filters landmarks if there are multiple landmarks of the same type without an accessible name.
-                  </li>
-                </ul>
+                <table class="table table-striped" aria-labelledby="options">
+                  <tbody>
+                    <tr>
+                      <th>
+                        Highlight all landmark regions
+                      </th>
+                      <td>
+                        Highlights all the  on the page.
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>
+                        Emulate how screen readers filter landmark regions
+                      </th>
+                      <td>
+                        Filters landmarks if there are multiple landmarks of the same type without an accessible name.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
 
-                <h2>Accessibility Considerations</h2>
+                <h2 id="a11y-considerations">Accessibility Considerations</h2>
 
-                <ul>
-                  <li>
-                    <em>Identify Regions:</em> Verify <a href="https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/">landmark regions</a> accurately identify all of the logical areas of the web page.  The visual layout and styling of the page, including spacing, borders, background colors and alignment can be used in identifying landmark regions.
-                  </li>
-                  <li>
-                    <em>Appropriate Type:</em> Verify the type of landmark represents the content in the region.  For example the main region contains the primary content of the wbe page.
-                  </li>
-                  <li>
-                    <em>Unique and Concise Names:</em> Landmark regions only need accessible names when there is more than one landmark of the same.  For example, if their are two navigation regions, each region should have an accessible name that describes the types of navigation links in the region.
-                  </li>
-                  <li>Related WCAG Requirements:
-                    <ul>
-                      <li>
-                        <a href="https://www.w3.org/TR/WCAG22/#info-and-relationships" target="_spec">
-                        Success Criterion 1.3.1 Info and Relationships
-                        </a>
-                      </li>
-                      <li>
-                        <a href="https://www.w3.org/TR/WCAG22/#bypass-blocks" target="_spec">
-                          Success Criterion 2.4.1 Bypass Blocks
-                        </a>
-                      </li>
-                      <li>
-                        <a href="https://www.w3.org/TR/WCAG22/#headings-and-labels" target="_spec">
-                          Success Criterion 2.4.6 Headings and Labels
-                        </a>
-                      </li>
-                      <li>
-                        <a href="https://www.w3.org/TR/WCAG22/#section-headings" target="_spec">
-                          Success Criterion 2.4.10 Section Headings
-                        </a>
-                      </li>
-                    </ul>
-                  </li>
-                  <li>
-                    <a href="https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/">W3C ARIA Authoring Practices for Landmark Regions</a>.
-                  </li>
-
-                </ul>
-
+                <table class="table table-striped" aria-labelledby="a11y-considerations">
+                  <tbody>
+                    <tr>
+                      <th>
+                        Identify Regions
+                      </th>
+                      <td>
+                        Verify <a href="https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/">landmark regions</a> accurately identify all of the logical areas of the web page.  The visual layout and styling of the page, including spacing, borders, background colors and alignment can be used in identifying landmark regions.
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>
+                        Appropriate Type
+                      </th>
+                      <td>
+                        Verify the type of landmark represents the content in the region.  For example the main region contains the primary content of the wbe page.
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>
+                        Unique and Concise Names
+                      </th>
+                      <td>
+                        Landmark regions only need accessible names when there is more than one landmark of the same.  For example, if their are two navigation regions, each region should have an accessible name that describes the types of navigation links in the region.
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>
+                        WCAG Requirements
+                      </th>
+                      <td>
+                        <ul>
+                          <li>
+                            <a href="https://www.w3.org/TR/WCAG22/#info-and-relationships" target="_spec">
+                            Success Criterion 1.3.1 Info and Relationships
+                            </a>
+                          </li>
+                          <li>
+                            <a href="https://www.w3.org/TR/WCAG22/#bypass-blocks" target="_spec">
+                              Success Criterion 2.4.1 Bypass Blocks
+                            </a>
+                          </li>
+                          <li>
+                            <a href="https://www.w3.org/TR/WCAG22/#headings-and-labels" target="_spec">
+                              Success Criterion 2.4.6 Headings and Labels
+                            </a>
+                          </li>
+                          <li>
+                            <a href="https://www.w3.org/TR/WCAG22/#section-headings" target="_spec">
+                              Success Criterion 2.4.10 Section Headings
+                            </a>
+                          </li>
+                        </ul>
+                      </td>
+                    <tr>
+                      <th>
+                        More Information
+                      </th>
+                      <td>
+                        <ul>
+                          <li>
+                            <a href="https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/">W3C ARIA Authoring Practices for Landmark Regions</a>.
+                          </li>
+                        </ul>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
 
               </section>
 

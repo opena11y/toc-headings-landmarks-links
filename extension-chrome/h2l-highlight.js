@@ -1,6 +1,6 @@
 /* h2l-highlight.js */
 
-const debug = true;
+const debug = false;
 
 const minWidth = 68;
 const minHeight = 27;
@@ -84,20 +84,18 @@ styleElem.textContent = `
   --contrast-width: 7px;
 
   --scroll-behavior:  instant;
-  --z-index-highlight: auto;
 }
 
 .container {
   display: block;
-  position: relative;
   top: 0;
   left: 0;
+  position: absolute;
 }
 
 .h2l-highlight {
   margin: 0;
   padding: 0;
-  position: absolute;
   top: 0;
   left: 0;
   background: transparent;
@@ -107,7 +105,7 @@ styleElem.textContent = `
   border-color: light-dark(var(--color-light-background), var(--color-dark-background));
   box-sizing: border-box;
   pointer-events:none;
-  z-index: auto;
+  z-index: 100000;
 }
 
 .h2l-highlight.hasInfoBottom,
@@ -128,7 +126,7 @@ styleElem.textContent = `
   border-width: var(--border-width);
   border-style: var(--border-style);
   border-color: light-dark(var(--color-light-border-color), var(--color-dark-border-color));
-  z-index: auto;
+  z-index: 100000;
   box-sizing: border-box;
   pointer-events:none;
   background: transparent;
@@ -147,7 +145,7 @@ styleElem.textContent = `
   border-color: light-dark(var(--color-light-background), var(--color-dark-background));
   background-color: light-dark(var(--color-light-background), var(--color-dark-background));
   color: light-dark(var(--color-light-text-color), var(--color-dark-text-color));
-  z-index: auto;
+  z-index: 100000;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -172,7 +170,7 @@ styleElem.textContent = `
   font-weight: bold;
   text-align: center;
   animation: fadeIn 1.5s;
-  z-index: auto;
+  z-index: 100000;
 }
 
 .h2l-highlight .overlay-info.hasInfoTop {
@@ -234,7 +232,7 @@ class H2LHighlightElement extends HTMLElement {
     this.attachShadow({ mode: 'open' });
 
     // Add style element
-    this.shadowRoot.appendChild(styleElem);
+    this.shadowRoot.appendChild(styleElem.cloneNode(true));
 
     // Get references
 
@@ -289,12 +287,11 @@ class H2LHighlightElement extends HTMLElement {
 
     this.msgIsHidden = 'Element is hidden';
 
-    this.zIndex = 0;
+    this.zIndex = 100000;
 
     this.lastElemRect = false;
     this.lastElemRole = this.elemRole;
     this.lastName = '';
-    this.lastScrollBehavior = 'none';
 
   }
 
@@ -362,7 +359,7 @@ class H2LHighlightElement extends HTMLElement {
       case "highlight":
         const parts = newValue.split(';');
 
-        if (parts.length >= 5) {
+        if (parts.length >= 4) {
 
           const rect = {};
           rect.left   = parseInt(parts[0]);
@@ -371,9 +368,8 @@ class H2LHighlightElement extends HTMLElement {
           rect.height = parseInt(parts[3]);
           rect.right  = rect.left + rect.width;
           rect.bottom = rect.top + rect.height;
-          const scrollto  = parts.length > 4 ? parts[4].trim() : 'none';
 
-          this.highlight(rect, scrollto);
+          this.highlight(rect);
         }
         else {
           this.removeHighlight();
@@ -438,24 +434,16 @@ class H2LHighlightElement extends HTMLElement {
    *
    *   @desc  Highlights the element on the page
    *
-   *   @param {Object}  elemRect       : Rect of element to highlight
-   *   @param {String}  scrollBehavior : 'instant', 'auto', 'smooth', 'none'
-   *   @param {Boolean} force          : If true override isRduced
+   *   @param {Object}  elemRect      : Rect of element to highlight
    */
 
-  highlight(elemRect, scrollBehavior='none', force=false) {
-    let scrollElement;
-    const mediaQuery = window.matchMedia(`(prefers-reduced-motion: reduce)`);
-    const isReduced = !mediaQuery || mediaQuery.matches;
+  highlight(elemRect) {
 
-    if (elemRect && scrollBehavior) {
+    if (elemRect) {
 
       this.lastElemRect = elemRect;
-      this.lastScrollBehavior = scrollBehavior;
 
       debug && console.log(`[ elemRect]: ${elemRect}`);
-      debug && console.log(`[   scroll]: ${scrollBehavior}`);
-
       const elemRole = (this.nameSrc === 'contents' || this.nameSrc === 'none') &&
                        !this.nameHasAlt &&
                        !this.showName ?
@@ -491,26 +479,26 @@ class H2LHighlightElement extends HTMLElement {
         this.hiddenElem.style.left = left + 'px';
         this.hiddenElem.style.top = top + 'px';
 
-        scrollElement = this.updateHighlightElement(this.hiddenElem.getBoundingClientRect(),
-                                                    elemRole,
-                                                    name,
-                                                    desc,
-                                                    0,
-                                                    this.highlightSize.borderWidth,
-                                                    this.highlightSize.contrastWidth,
-                                                    this.highlightSize.overlayAdjust);
+        this.updateHighlightElement(this.hiddenElem.getBoundingClientRect(),
+                                    elemRole,
+                                    name,
+                                    desc,
+                                    0,
+                                    this.highlightSize.borderWidth,
+                                    this.highlightSize.contrastWidth,
+                                    this.highlightSize.overlayAdjust);
       }
       else {
         this.hiddenElem.setAttribute('hidden', '');
 
-        scrollElement = this.updateHighlightElement(elemRect,
-                                                    elemRole,
-                                                    name,
-                                                    desc,
-                                                    this.highlightSize.borderOffset,
-                                                    this.highlightSize.borderWidth,
-                                                    this.highlightSize.contrastWidth,
-                                                    this.highlightSize.overlayAdjust);
+        this.updateHighlightElement(elemRect,
+                                    elemRole,
+                                    name,
+                                    desc,
+                                    this.highlightSize.borderOffset,
+                                    this.highlightSize.borderWidth,
+                                    this.highlightSize.contrastWidth,
+                                    this.highlightSize.overlayAdjust);
       }
     }
   }
@@ -547,13 +535,13 @@ class H2LHighlightElement extends HTMLElement {
     const a = -1 * (contrastWidth);
     const b = (contrastWidth - borderWidth) / 2;
 
-    this.containerElem.style.top  = -1 * (elemRect.height + borderOffset) + 'px';
-    this.containerElem.style.left  = -1 * borderOffset + 'px';
+    this.containerElem.style.top   = window.scrollY + elemRect.top  - 2 * borderOffset + 'px';
+    this.containerElem.style.left  = window.scrollX + elemRect.left - 2 * borderOffset + 'px';
 
     this.overlayElem.style.left   = 0   + 'px';
     this.overlayElem.style.top    = 0   + 'px';
 
-    this.overlayElem.style.zIndex = this.zIndex + 1;
+//    this.overlayElem.style.zIndex = this.zIndex + 1;
 
     this.borderElem.style.left    = a + b + 'px';
     this.borderElem.style.top     = a + b + 'px';

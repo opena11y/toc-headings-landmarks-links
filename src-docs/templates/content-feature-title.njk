@@ -12,25 +12,44 @@
 
                 <p>The first section of the side panel is labeled "Page Title" followed on the next line with the <em>title</em> of the associated web page.</p>
 
-                <h2>Accessibility Considerations</h2>
+                <h2 id="a11y-considerations">Accessibility Considerations</h2>
 
-                <ul>
-                  <li>
-                    Verify the <em>title</em> of a web page provides a description of both the website and the specific page.  The specific page information should be the first part of the title followed by the website information.
-                  </li>
-                  <li>
-                    People using screen readers hear the <em>title</em> first when the page is loading and using screen reader commands have the <em>title</em> read to them to understand which web page they are viewing.
-                  </li>
-                  <li>Related WCAG Requirement:
-                    <ul>
-                      <li>
+                <table class="table table-striped" aria-labelledby="a11y-considerations">
+                  <tbody>
+                    <tr>
+                      <th>
+                        Descriptive
+                      </th>
+                      <td>
+                        <ul>
+                          <li>
+                            Verify the <code>title</code> element of a web page provides a description of both the website and the specific page.  The specific page information should be the first part of the title followed by the website information.
+                          </li>
+                          <li>
+                            People using screen readers hear the <code>title</code> element content first when the page is loading and screen readers have commands to read the <code>title</code> element content of the page at any time by the user.
+                          </li>
+                        </ul>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>
+                        WCAG Requirement
+                      </th>
+                      <td>
                         <a href="https://www.w3.org/WAI/WCAG22/Understanding/page-titled.html">
                           2.4.2 Page Titled (Level A)
                         </a>
-                      </li>
-                    </ul>
-                  </li>
-                  <li><a href="https://www.w3.org/WAI/test-evaluate/easy-checks/title/">W3C WAI Easy Checks for Page Title</a></li>
-                </ul>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>
+                        More Information
+                      </th>
+                      <td>
+                        <a href="https://www.w3.org/WAI/test-evaluate/easy-checks/title/">W3C WAI Easy Checks for Page Title</a>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </section>
 
