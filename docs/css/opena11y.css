@@ -644,9 +644,9 @@ main .table > :not(caption) > * > * {
   background-color: light-dark(var(--textBackground), var(--textBackGroundDark));
 }
 
-main .table-striped > tbody > tr:nth-child(odd) > * {
+main .table-striped > tbody > tr:nth-of-type(odd) > * {
   color: light-dark(var(--textColor), var(--textColorDark));
-  background-color: light-dark(#eee, #333);
+  background-color: light-dark(#fff, #222) !important;
 }
 
 main .faq .content h2 {
