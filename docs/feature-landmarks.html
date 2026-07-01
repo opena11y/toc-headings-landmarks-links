@@ -163,7 +163,7 @@
                         <figcaption>Screen Shot of Landmark Tab selected</figcaption>
                 </figure>
 
-                <h2>Feature</h2>
+                <h2>Features</h2>
                 <ul>
                   <li>
                     The second tab provides a <a href="https://www.w3.org/WAI/ARIA/apg/patterns/listbox/">list view</a> of the landmark regions of a web page.
@@ -216,7 +216,7 @@
                         Appropriate Type
                       </th>
                       <td>
-                        Verify the type of landmark represents the content in the region.  For example the main region contains the primary content of the wbe page.
+                        Verify the type of landmark represents the content in the region.  For example the main region contains the primary content of the web page.
                       </td>
                     </tr>
                     <tr>
@@ -225,6 +225,22 @@
                       </th>
                       <td>
                         Landmark regions only need accessible names when there is more than one landmark of the same.  For example, if their are two navigation regions, each region should have an accessible name that describes the types of navigation links in the region.
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>
+                        Number of Landmarks
+                      </th>
+                      <td>
+                        There is no hard and fast rule on the number of landmarks on page.  The more landmarks defined, the longer it will take people using screen readers to explore the list of landmarks.  In general most pages probably need less than 12 landmarks.  Complex pages may benefit from more than 12 landmarks and the longer list of landmarks is an indication to screen reader users of the complexity of the page.
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>
+                        Nesting Landmarks
+                      </th>
+                      <td>
+                        Don't nest landmarks of the same type.  This will be confusing to screen reader users since navigation using different landmarks will bring user to the same place on a page.  This often happens with navigation landmarks when the <code>nav</code> element is nested in other <code>nav</code> elements.
                       </td>
                     </tr>
                     <tr>

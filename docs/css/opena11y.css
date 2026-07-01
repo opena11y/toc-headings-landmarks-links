@@ -489,6 +489,7 @@ main .feature ul ol li,
 main .feature ol ol li {
   margin: 0;
   padding: 0;
+  margin-left: 0.5em;
   padding-bottom: 0.125em;
 }
 
@@ -529,7 +530,7 @@ table.table tbody td ol {
 table.table tbody td li {
   margin: 0;
   padding: 0;
-  margin-left: 1.75em;
+  margin-left: 1em;
 }
 
 main dt {

@@ -8,7 +8,7 @@
                         <figcaption>Screen Shot of Links Tab selected</figcaption>
                 </figure>
 
-                <h2>Feature</h2>
+                <h2>Features</h2>
                 <ul>
                   <li>
                     The third tab provides a <a href="https://www.w3.org/WAI/ARIA/apg/patterns/grid/">grid view</a> of the links of a web page.
@@ -22,34 +22,25 @@
                       <li>Information on the domain name of URL or file extensions.</li>
                     </ol>
                   </li>
-                  <li>Checkbox to highlight all headings on a page.</li>
+                  <li>Columns are sortable</li>
+                  <li>Checkbox to highlight all links.</li>
                   <li>Checkbox to include accessible name as part of the highlight.</li>
                   <li>Button to open a dialog of options to filter links based on domain information.</li>
                 </ul>
 
-                <h2>Link Filter Options</h2>
-
-                <figure class="image">
-                   <img src="./images/feature-link-filters.png"
-                        alt=""/>
-                        <figcaption>Screen Shot of links filter dialog box options</figcaption>
-                </figure>
-
-                <p>Link filtering options include:</p>
-                <ul>
-                  <li>Internal links</li>
-                  <li>Same sub-domain links</li>
-                  <li>Same domain links</li>
-                  <li>External links</li>
-                  <li>Links with non-html file extension links (e.g. .pdf, .docx, .xlsx ...)</li>
-                </ul>
-
-                 {% include "./link-types.njk" %}
 
                 <h2 id="a11y-considerations">Accessibility Considerations</h2>
 
                 <table class="table table-striped" aria-labelledby="a11y-considerations">
                   <tbody>
+                    <tr>
+                      <th>
+                        Concise and unique
+                      </th>
+                      <td>
+                        Verify link text is short but still informative. Each link should have unique text, especially if it leads to different locations.
+                      </td>
+                    </tr>
                     <tr>
                       <th>
                         Avoid generic phrases
@@ -63,15 +54,17 @@
                         Provide context
                       </th>
                       <td>
-                        Verify the link text clearly indicates the link's destination or purpose.  For example instead of "click here," use "Download the report" or "Register for the event".
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>
-                        Concise and unique
-                      </th>
-                      <td>
-                        Verify link text is short but still informative. Each link should have unique text, especially if it leads to different locations.
+                        <ul>
+                          <li>
+                            Verify the link text clearly indicates the link's destination or purpose.  For example instead of "click here," use "Download the report" or "Register for the event".
+                          </li>
+                          <li>
+                            If a link does share the same link text with other links and it is not possible to change the text use <code>aria-description</code> or <code>aria-describedby</code> attribute to provide the additional context to screen reader users.  Screen readers typically read the accessible description after the link text.
+                          </li>
+                          <li>
+                            The <em>H2L Sidepanel</em> extension provides information on links with accessible descriptions.
+                          </li>
+                        </ul>
                       </td>
                     </tr>
                     <tr>
@@ -96,6 +89,26 @@
                     </tr>
                   </tbody>
                 </table>
+
+                <h2>Link Filter Options</h2>
+
+                <figure class="image">
+                   <img src="./images/feature-link-filters.png"
+                        alt=""/>
+                        <figcaption>Screen Shot of links filter dialog box options</figcaption>
+                </figure>
+
+                <p>Link filtering options include:</p>
+                <ul>
+                  <li>Internal links</li>
+                  <li>Same sub-domain links</li>
+                  <li>Same domain links</li>
+                  <li>External links</li>
+                  <li>Links with non-html file extension links (e.g. .pdf, .docx, .xlsx ...)</li>
+                </ul>
+
+                 {% include "./link-types.njk" %}
+
 
               </section>
 
