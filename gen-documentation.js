@@ -50,6 +50,7 @@ const mainPages = [
     filename: 'index.html'
   },
   { dropdown: 'Features',
+    id: 'id-features',
     pages: [
       { content: 'content-feature-title.njk',
         title: 'Page Title',
@@ -99,6 +100,7 @@ const mainPages = [
     filename: 'faq.html'
   },
   { dropdown: 'About',
+    id: 'id-about',
     pages: [
       { content: 'content-about-history.njk',
         title: 'History',
@@ -145,8 +147,9 @@ function createNavigation(pages) {
              data-bs-toggle="dropdown"
             href="#"
             role="button"
-            aria-expanded="false">${item.dropdown}</a>
-          <ul class="dropdown-menu">`;
+            aria-expanded="false"
+            aria-controls="${item.id}">${item.dropdown}</a>
+          <ul class="dropdown-menu" id="${item.id}">`;
 
       item.pages.forEach( p => {
         console.log(`[dropdown][page]: ${p.filename}`);

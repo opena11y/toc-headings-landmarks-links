@@ -150,7 +150,7 @@
   /* Constants */
   const debug$19 = new DebugLogging('constants', false);
 
-  const VERSION = '2.2.2';
+  const VERSION = '2.3';
 
   /**
    * @constant RULESET
@@ -706,6 +706,35 @@
 
 
   /* helper functions */
+
+  function getTagnameAndRoleOfControlledElem(doc, elem) {
+    let role = '';
+    let tagname = '';
+    let controlledElem;
+
+    if (elem.ariaControlsElements && elem.ariaControlsElements.length) {
+      controlledElem = elem.ariaControlsElements[0];
+    }
+
+    // For browsers that do not support ariaControlsElements
+    if (!controlledElem && elem.hasAttribute('aria-controls')) {
+      const id = elem.getAttribute('aria-controls').trim();
+      if (id) {
+        controlledElem = doc.getElementById(id);
+      }
+    }
+
+    if (controlledElem) {
+      tagname = controlledElem.tagName.toLowerCase();
+      if (controlledElem.hasAttribute('role')) {
+        role = controlledElem.getAttribute('role').toLowerCase().trim();
+      }
+    }
+
+    return [tagname, role];
+  }
+
+
 
   function isLabelable (node) {
 
@@ -11152,6 +11181,75 @@
             { type: REFERENCES.EXAMPLE,
               title: 'ARIA Authoring Practices',
               url:   'https://www.w3.org/WAI/ARIA/apg/'
+            }
+          ]
+      },
+      WIDGET_16: {
+          ID:                    'Widget 16',
+          DEFINITION:            '@aria-haspopup@ references a @dialog@, @grid@, @listbox@, @menu@ or @tree@ widget.',
+          SUMMARY:               '@aria-haspopup@ references a supported widget',
+          TARGET_RESOURCES_DESC: 'aria-haspopup',
+          RULE_RESULT_MESSAGES: {
+            FAIL_S:  'Remove from the element with the @aria-haspopup@ attribute or provide a reference to a supported widget.',
+            FAIL_P:  'Remove from the $N_F elements with the @aria-haspopup@ attribute or provide a reference to a supported widget.',
+            MANUAL_CHECK_S:  'Verify behavior and markup of the widget reference associated with element with @aria-haspopup@ attribute.',
+            MANUAL_CHECK_P:  'Verify behavior and markup of the widget references associated with %N_MC elements with @aria-haspopup@ attribute.',
+            HIDDEN_S: 'The hidden element with @aria-haspopup@ was not evaluated.',
+            HIDDEN_P: 'The %N_H hidden elements with @aria-haspopup@ were not evaluated.',
+            NOT_APPLICABLE:  'No elements with @aria-haspopup@ found on the page.'
+          },
+          BASE_RESULT_MESSAGES: {
+            ELEMENT_FAIL_1:    'The @%1[aria-haspopup="%2"]@ element does not have a reference to a supported widget, either remove the @aria-haspopup@ attribute or add a reference to a supported widget.',
+            ELEMENT_FAIL_2:    'The @%1[aria-haspopup="%2"]@ element reference does not have a supported widget role.',
+            ELEMENT_FAIL_3:    'The @%1[aria-haspopup="%2"]@ element references an element with an unsupported @%3@ role.',
+            ELEMENT_FAIL_4:    'The @aria-haspopup="%2"@ attribute value is in conflict with the referenced widget role of @%3@.',
+            ELEMENT_MC_1:      'Verify the reference to the @%1[role="%2"]@ element has the required behavior and markup associated with the @%3@ widget.',
+            ELEMENT_HIDDEN_1:  'The @%1[aria-haspopup="%2"]@ is hidden from assistive technologies.',
+          },
+          PURPOSES: [
+            'In ARIA, interactive menus, listboxes, trees, grids, and dialogs that appear on top of other content when triggered to appear are considered "popups".',
+            'These popups are triggered by one or more interactive elements on the page (e.g. @button@, @textbox@ ...)',
+            'The availability and type of popup the interactive element will trigger is identified with the @aria-haspopup@ value.',
+            'Screen readers often change from "reading" to "interactive" mode when an element with @aria-haspopup@ is triggered, since keyboard focus is expected to move to referenced widget.'
+          ],
+          TECHNIQUES: [
+            'If the trigger opens an ARIA defined @dialog@, set @aria-haspopup="dialog"@.',
+            'If the trigger opens an ARIA defined @grid@, set @aria-haspopup="grid"@.',
+            'If the trigger opens an ARIA defined @listbox@, set @aria-haspopup="listbox"@.',
+            'If the trigger opens an ARIA defined @menu@, set @aria-haspopup="menu"@.',
+            'If the trigger opens an ARIA defined @tree@, set @aria-haspopup="tree"@.',
+            'Remove the @aria-haspopup@ if the trigger is NOT associated with a ARIA defined @dialog@, @grid@, @listbox@, @menu@ and @tree@.  For example, the @aria-haspopup@ is often mistakenly used with disclosure buttons, since content often appears on the screen similar to the supported widgets.'
+          ],
+          MANUAL_CHECKS: [
+          ],
+          INFORMATIONAL_LINKS: [
+            { type: REFERENCES.SPECIFICATION,
+              title: 'ARIA 1.2 Specification: aria-haspopup',
+              url:   'https://www.w3.org/TR/wai-aria-1.2/#aria-haspopup'
+            },
+            { type: REFERENCES.SPECIFICATION,
+              title: 'MDN: aria-haspopup attribute',
+              url:   'ttps://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-haspopup'
+            },
+            { type: REFERENCES.EXAMPLE,
+              title: 'ARIA Authoring Practices: Dialog',
+              url:   'https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/'
+            },
+            { type: REFERENCES.EXAMPLE,
+              title: 'ARIA Authoring Practices: Grid',
+              url:   'https://www.w3.org/WAI/ARIA/apg/patterns/grid/'
+            },
+            { type: REFERENCES.EXAMPLE,
+              title: 'ARIA Authoring Practices: Listbox',
+              url:   'https://www.w3.org/WAI/ARIA/apg/patterns/listbox/'
+            },
+            { type: REFERENCES.EXAMPLE,
+              title: 'ARIA Authoring Practices: Menu Button',
+              url:   'https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/'
+            },
+            { type: REFERENCES.EXAMPLE,
+              title: 'ARIA Authoring Practices: Tree View',
+              url:   'https://www.w3.org/WAI/ARIA/apg/patterns/treeview/'
             }
           ]
       }
@@ -31694,34 +31792,44 @@
       let c, parts, r1, g1, b1;
       let o1 = 1.0;
 
-      if (isRGB(color)) {
-        c = color.replace('"', '');
-        c = c.split(')')[0];
-        c = c.split('(')[1];
-        parts = c.split(',');
-        r1 = parseFloat(parts[0]);
-        g1 = parseFloat(parts[1]);
-        b1 = parseFloat(parts[2]);
-        o1 = parts.length === 4 ? parseFloat(parts[3]) : 1.0;
-      }
-      else {
-        if (isSRGB(color)) {
-          c = color.split(')')[0];
-          c = c.split('srgb')[1].trim();
-          parts = c.split(' ');
-          r1 = parseFloat(parts[0]) * 255;
-          g1 = parseFloat(parts[1]) * 255;
-          b1 = parseFloat(parts[2]) * 255;
-          o1 = parts.length === 5 ? parseFloat(parts[4]) : 1.0;
+      if (color) {
+        if (isRGB(color)) {
+          c = color.replace('"', '');
+          c = c.split(')')[0];
+          c = c.split('(')[1];
+          parts = c.split(',');
+          r1 = parseFloat(parts[0]);
+          g1 = parseFloat(parts[1]);
+          b1 = parseFloat(parts[2]);
+          o1 = parts.length === 4 ? parseFloat(parts[3]) : 1.0;
         }
         else {
-          c = new Color(color);
-          const cRGB  = new Color (c.to(`srgb`).toString());
-          r1 = parseInt(cRGB.r * 255);
-          g1 = parseInt(cRGB.g * 255);
-          b1 = parseInt(cRGB.b * 255);
-          o1 = cRGB.alpha;
+          if (isSRGB(color)) {
+            c = color.split(')')[0];
+            c = c.split('srgb')[1].trim();
+            parts = c.split(' ');
+            r1 = parseFloat(parts[0]) * 255;
+            g1 = parseFloat(parts[1]) * 255;
+            b1 = parseFloat(parts[2]) * 255;
+            o1 = parts.length === 5 ? parseFloat(parts[4]) : 1.0;
+          }
+          else {
+            c = new Color(color);
+            const cRGB  = new Color (c.to(`srgb`).toString());
+            r1 = parseInt(cRGB.r * 255);
+            g1 = parseInt(cRGB.g * 255);
+            b1 = parseInt(cRGB.b * 255);
+            o1 = cRGB.alpha;
+          }
         }
+      }
+      else {
+        c = new Color('rgba(0, 0, 0, 0)');
+        const cRGB  = new Color (c.to(`srgb`).toString());
+        r1 = parseInt(cRGB.r * 255);
+        g1 = parseInt(cRGB.g * 255);
+        b1 = parseInt(cRGB.b * 255);
+        o1 = cRGB.alpha;
       }
 
       if (!isHex(backgroundHex)) {
@@ -34968,7 +35076,9 @@
   *                     'nameIsNotVisible' {Boolean}
   */
   function getAccessibleName (doc, element) {
-    let accName = nameFromAttributeIdRefs(doc, element, 'aria-labelledby');
+    let accName = nameFromRefArray(element, 'ariaLabelledByElements');
+    // the next if is in case the array property is not supported by an older browser
+    if (accName === null) accName = nameFromAttributeIdRefs(doc, element, 'aria-labelledby');
     if (accName === null) accName = nameFromAttribute(element, 'aria-label');
     if (accName === null) accName = nameFromNativeSemantics(doc, element);
     if (accName === null) accName = noAccName;
@@ -34996,7 +35106,9 @@
   *                     'nameIsNotVisible' {Boolean}
   */
   function getAccessibleDesc (doc, element, allowTitle=true) {
-    let accDesc = nameFromAttributeIdRefs(doc, element, 'aria-describedby');
+    let accDesc = nameFromRefArray(element, 'ariaDescribedByElements');
+    // the next if is in case the array property is not supported by an older browser
+    if (accDesc === null) accDesc = nameFromAttributeIdRefs(doc, element, 'aria-describedby');
     if (accDesc === null) accDesc = nameFromAttribute(element, 'aria-description');
     if (allowTitle && (accDesc === null)) accDesc = nameFromAttribute(element, 'title');
     if (accDesc === null) accDesc = noAccName;
@@ -35021,9 +35133,9 @@
   *                     'nameIsNotVisible' {Boolean}
   */
   function getErrMessage (doc, element) {
-    let errMessage = null;
-
-    errMessage = nameFromAttributeIdRefs(doc, element, 'aria-errormessage');
+    let errMessage = nameFromRefArray(element, 'ariaErrorMessageElements');
+    // the next if is in case the array property is not supported by an older browser
+    if (errMessage === null) errMessage = nameFromAttributeIdRefs(doc, element, 'aria-errormessage');
     if (errMessage === null) errMessage = noAccName;
 
     return errMessage;
@@ -35174,6 +35286,73 @@
   // HELPER FUNCTIONS (NOT EXPORTED)
 
   /*
+  *   @function nameFromRefArray
+  *
+  *   @desc Get the value of attrName on element reference array,
+  *         visit each referenced element in the order it
+  *         appears in the list and obtain its accessible name, and return an object
+  *         with name property set to a string that is a space-separated concatenation
+  *         of those results if any, otherwise return null.
+  *
+  *   @desc (Object)  element   -  DOM node of element to compute name
+  *   @desc (String)  property  -  Property array for the element nodes
+  *                                (e.g. ariaLabelledByElements, ariaDescribedByElements,
+  *                                      ariaErrorMessageElements)
+  *
+  *   @returns {Object} Returns a object with an 'name' and 'source' property
+  */
+  function nameFromRefArray (element, property) {
+    let name, names, arr = [];
+    let includesAlt = false;
+    let includesAriaLabel = false;
+    let refNotVisible = false;
+
+    if (element[property] && element[property].length) {
+
+      element[property].forEach( (refElement) => {
+        if (refElement) {
+          if (refElement.hasAttribute('aria-label')) {
+            name = refElement.getAttribute('aria-label');
+            includesAriaLabel = true;
+          }
+          else {
+            if (refElement.hasChildNodes()) {
+              refNotVisible = refNotVisible || isDisplayNone(refElement) || isVisibilityHidden(refElement);
+              names = [];
+              let children = Array.from(refElement.childNodes);
+              children.forEach( child => {
+                // Need to ignore CSS display: none and visibility: hidden for referenced
+                // elements, but not their child elements
+                const [nc, nInclAlt, nInclAriaLabel] = getNodeContents(child, refElement, true);
+                if (nc.length) names.push(nc);
+                includesAlt       = includesAlt || nInclAlt;
+                includesAriaLabel = includesAriaLabel || nInclAriaLabel;
+              });
+              name = (names.length) ? names.join('') : '';
+            }
+            else {
+              name = '';
+            }
+          }
+          name = addCssGeneratedContent(refElement, name);
+          if (name.length) arr.push(name);
+        }
+      });
+    }
+
+    if (arr.length)
+      return { name: normalize(arr.join(' ')),
+               source: property,
+               includesAlt: includesAlt,
+               includesAriaLabel: includesAriaLabel,
+               nameIsNotVisible: refNotVisible
+             };
+
+    return null;
+  }
+
+
+  /*
   *   @function nameFromAttributeIdRefs
   *
   *   @desc Get the value of attrName on element (a space-
@@ -35184,7 +35363,9 @@
   *
   *   @desc (Object)  doc              -  Parent document of element
   *   @desc (Object)  element          -  DOM node of element to compute name
-  *   @desc (Boolean) nameFromContent  -  If true allow element content to be used as name
+  *   @desc (String)  attribute        -  Identifies the naming attribute
+  *                                       (e.g aria-labelledby, aria-describedby or
+  *                                            aria-errormessage)
   *
   *   @returns {Object} Returns a object with an 'name' and 'source' property
   */
@@ -35387,9 +35568,18 @@
       this.htmlAttrs  = this.getHtmlAttrs(elementNode);
       this.ariaAttrs  = this.getAriaAttrs(elementNode);
 
+      // For Widget 16 rule on aria-haspopup
+      this.hasPopup     = elementNode.hasAttribute('aria-haspopup');
+      this.popupValue   = this.hasPopup ?
+                          elementNode.getAttribute('aria-haspopup').toLowerCase().trim() :
+                          '';
+      this.hasControlsRef  = elementNode.ariaControlsElements || elementNode.hasAttribute('aria-controls');
+      [this.controlsTagname, this.controlsRole] = this.hasControlsRef ?
+                          getTagnameAndRoleOfControlledElem(accNameDoc, elementNode) :
+                          ['',''];
+
       this.hasContent = elementsWithContent.includes(this.tagName);
       this.mayHaveContent = elementsThatMayHaveContent.includes(this.tagName);
-
 
       this.isButton    = this.role === 'button' && this.tagName === 'button';
       this.isLink      = this.role === 'link' && this.tagName === 'a';
@@ -37534,6 +37724,7 @@
     'style',
     'template',
     'shadow',
+    'source',
     'title',
     'h2l-highlight',
     'opena11y-ai-highlight',
@@ -49022,6 +49213,54 @@
           }
         }
       });
+    } // end validation function
+  },
+
+  /**
+   * @object WIDGET_15
+   *
+   * @desc    Check for valid use of aria-haspopup
+   */
+  { rule_id             : 'WIDGET_16',
+    last_updated        : '2026-07-08',
+    rule_scope          : RULE_SCOPE.ELEMENT,
+    rule_category       : RULE_CATEGORIES.WIDGETS_SCRIPTS,
+    rule_required       : true,
+    first_step          : false,
+    axe_refs            : [],
+    wave_refs           : [],
+    wcag_primary_id     : '4.1.2',
+    wcag_related_ids    : ['1.3.1', '2.1.1'],
+    target_resources    : ["aria-haspopup"],
+    validate          : function (dom_cache, rule_result) {
+      const supportedRoles = ['menu', 'listbox', 'tree', 'grid', 'dialog'];
+
+      dom_cache.allDomElements.forEach( de => {
+        if (de.hasPopup && (de.popupValue !== 'false')) {
+          if (de.visibility.isVisibleToAT) {
+            if (de.hasControlsRef) {
+              if (de.controlsRole) {
+                if (supportedRoles.includes(de.controlsRole)) {
+                  if (de.popupValue === 'true' || (de.popupValue === de.controlsRole)) {
+                    rule_result.addElementResult(TEST_RESULT.MANUAL_CHECK, de, 'ELEMENT_MC_1', [de.controlsTagname, de.controlsRole, de.controlsRole] );
+                  } else {
+                    rule_result.addElementResult(TEST_RESULT.FAIL, de, 'ELEMENT_FAIL_4', [de.tagName, de.popupValue, de.controlsRole]);
+                  }
+                } else {
+                  rule_result.addElementResult(TEST_RESULT.FAIL, de, 'ELEMENT_FAIL_3', [de.tagName, de.popupValue, de.controlsRole]);
+                }
+              } else {
+                rule_result.addElementResult(TEST_RESULT.FAIL, de, 'ELEMENT_FAIL_2', [de.tagName, de.popupValue, de.controlsValue]);
+              }
+            } else {
+              rule_result.addElementResult(TEST_RESULT.FAIL, de, 'ELEMENT_FAIL_1', [de.tagName, de.popupValue]);
+            }
+          } else {
+            rule_result.addElementResult(TEST_RESULT.HIDDEN, de, 'ELEMENT_HIDDEN_1', [de.tagName, de.popupValue ]);
+          }
+        }
+      });
+
     } // end validation function
   }
   ];
